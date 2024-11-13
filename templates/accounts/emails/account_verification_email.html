@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+Hola, {{ user.first_name }} te damos la bienvenida.
+
+Por favor da un click en este link para confirmar tu lugar en el taller del Club de Lectura(Pedro Paramo, Satelite).
+http://{{domain}}{% url 'activate' uidb64=uid token=token %}
+
+{% endautoescape %}
