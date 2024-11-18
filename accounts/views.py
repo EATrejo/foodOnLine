@@ -100,7 +100,7 @@ def registerVendor(request):
             email_template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template)
 
-            messages.success(request, 'Your account has been registered successfully! Please wait for the approval.')
+            messages.success(request, 'Your account has been registered successfully! Please wait a confirmation email for the approval.')
             return redirect('registerVendor')
         else:
             print('invalid form')
