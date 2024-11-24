@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 
-from .context_processors import get_cart_counter
+from .context_processors import get_cart_amounts, get_cart_counter
 
 from .models import Cart
 from menu.models import Category, FoodItem
@@ -53,10 +53,10 @@ def add_to_cart(request, food_id):
                     # Increase Cart quantity
                     checkCart.quantity += 1
                     checkCart.save()
-                    return JsonResponse({'status': 'success', 'message': 'Increased Cart quantity', 'cart_counter': get_cart_counter(request), 'qty': checkCart.quantity})
+                    return JsonResponse({'status': 'success', 'message': 'Increased Cart quantity', 'cart_counter': get_cart_counter(request), 'qty': checkCart.quantity,'cart_amount': get_cart_amounts(request)})
                 except:
                     checkCart = Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1,)
-                    return JsonResponse({'status': 'success', 'message': 'Added the food to the Cart', 'cart_counter': get_cart_counter(request), 'qty': checkCart.quantity})
+                    return JsonResponse({'status': 'success', 'message': 'Added the food to the Cart', 'cart_counter': get_cart_counter(request), 'qty': checkCart.quantity,'cart_amount': get_cart_amounts(request)})
 
             except:
                 return JsonResponse({'status': 'Failed', 'message': 'This food does not exist'})
@@ -84,7 +84,7 @@ def decrease_cart(request, food_id):
                     else:
                         checkCart.delete()
                         checkCart.quantity = 0
-                    return JsonResponse({'status': 'success', 'cart_counter': get_cart_counter(request), 'qty': checkCart.quantity})
+                    return JsonResponse({'status': 'success', 'cart_counter': get_cart_counter(request), 'qty': checkCart.quantity, 'cart_amount': get_cart_amounts(request)})
                 except:
                     return JsonResponse({'status': 'Failed', 'message': 'You dont have this item in the Cart'})
 
@@ -114,7 +114,7 @@ def delete_cart(request, cart_id):
                 cart_item = Cart.objects.get(user=request.user, id=cart_id)
                 if cart_item:
                     cart_item.delete()
-                    return JsonResponse({'status': 'Success', 'message': 'Cart item has been deleted', 'cart_counter': get_cart_counter(request)})
+                    return JsonResponse({'status': 'Success', 'message': 'Cart item has been deleted', 'cart_counter': get_cart_counter(request), 'cart_amount': get_cart_amounts(request)})
             except:
                 return JsonResponse({'status': 'Failed', 'message': 'This cart item does not exist'})  
         else:
